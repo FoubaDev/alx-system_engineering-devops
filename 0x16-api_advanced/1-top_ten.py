@@ -8,12 +8,13 @@ def top_ten(subreddit):
     Write a function that queries the Reddit API and prints the titles \
             of the first 10 hot posts listed for a given subreddit.
     """
-    sub_info = requests.get("https://www.reddit.com/r/{}/hot.json?limit=10"
-                            .format(subreddit),
-                            headers={"User-Agent": "My-User-Agent"},
-                            allow_redirects=False)
-    if sub_info.status_code >= 300:
-        print('None')
-    else:
-        [print(child.get("data").get("title"))
-         for child in sub_info.json().get("data").get("children")]
+    url = 'https://www.reddit.com/r/{}/hot.json?show="all"&limit=10'.format(
+        subreddit)
+    headers = {'User-Agent': 'Python/1.0(ALX)'}
+    response = requests.get(url, headers=headers)
+    try:
+        top_ten = response.json()['data']['children']
+        for post in top_ten:
+            print(post['data']['title'])
+    except KeyError:
+        print("None")
