@@ -1,10 +1,10 @@
-# add stable version of nginx
+# add stable version
 exec { 'add nginx stable repo':
   command => 'sudo add-apt-repository ppa:nginx/stable',
   path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
 }
 
-# update software packages list
+# update software packages
 exec { 'update packages':
   command => 'apt-get update',
   path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
@@ -47,12 +47,10 @@ file { 'Nginx default config file':
         listen 80 default_server;
         listen [::]:80 default_server;
                root /var/www/html;
-        # Add index.php to the list if you are using PHP
         index index.html index.htm index.nginx-debian.html;
         server_name _;
         location / {
-                # First attempt to serve request as file, then
-                # as directory, then fall back to displaying a 404.
+                # Serve request as file before
                 try_files \$uri \$uri/ =404;
         }
         error_page 404 /404.html;
@@ -72,7 +70,7 @@ exec { 'restart service':
   path    => '/usr/bin:/usr/sbin:/bin',
 }
 
-# start service nginx
+# start service
 service { 'nginx':
   ensure  => running,
   require => Package['nginx'],
